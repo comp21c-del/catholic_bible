@@ -1,0 +1,1130 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>성경 필사책</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Pen+Script&family=Nanum+Brush+Script&family=Gaegu&family=Hi+Melody&family=Poor+Story&family=Gamja+Flower&family=Song+Myung&display=swap">
+<style>
+/* Layout: a linen desk; tools sit above an open, leather-bound book with gilt edges and a ribbon. */
+:root{
+  --desk:#d9ded6; --panel:#f3f5f0; --fg:#22302b; --muted:#5d6b64; --line:#b9c2b8;
+  --accent:#7a2231; --accent-fg:#ffffff; --gilt:#b8923f; --cover:#5b1f2a; --shadow:rgba(30,40,35,.28);
+  --ui:'Gowun Dodum','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --display:'Gowun Batang','Nanum Myeongjo','AppleMyungjo',serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --desk:#151c1a; --panel:#1f2826; --fg:#e6ebe6; --muted:#9aa8a1; --line:#34413d;
+  --accent:#d98a96; --accent-fg:#23100f; --gilt:#c9a24b; --cover:#4a1822; --shadow:rgba(0,0,0,.55); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --desk:#151c1a; --panel:#1f2826; --fg:#e6ebe6; --muted:#9aa8a1; --line:#34413d;
+  --accent:#d98a96; --accent-fg:#23100f; --gilt:#c9a24b; --cover:#4a1822; --shadow:rgba(0,0,0,.55); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--desk);color:var(--fg);font-family:var(--ui);font-size:15px;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding-inline:16px;padding-block:8px 20px;display:flex;flex-direction:column;gap:10px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+#book-title{flex:1 1 220px;min-width:0;font-family:var(--display);font-weight:700;font-size:1.25rem;background:transparent;border:0;border-bottom:1px solid transparent;padding:2px 0}
+#book-title:hover,#book-title:focus{border-bottom-color:var(--line)}
+#status{color:var(--muted);font-size:.78rem;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.nav span{min-width:7.5em;text-align:center;color:var(--muted)}
+
+.btn{background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:2px 9px;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default;border-color:var(--line)}
+.btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+
+.tools{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;background:transparent;border:0;border-right:1px solid var(--line);padding:5px 4px;font-size:.85rem;cursor:pointer}
+.tabs button:last-child{border-right:0}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+.panel{padding:6px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px}
+.group{display:flex;align-items:center;gap:6px;min-width:0}
+.group>label,.group>.lbl{color:var(--muted);font-size:.78rem;white-space:nowrap}
+.scroll{display:flex;gap:5px;overflow-x:auto;max-width:100%;padding:2px}
+.fonts{flex:1 1 100%}
+.fonts .btn{font-size:.92rem;padding:1px 9px}
+.sw{width:21px;height:21px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0;flex:none}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--accent)}
+input[type=color]{width:26px;height:23px;padding:0;border:1px solid var(--line);border-radius:6px;background:transparent;cursor:pointer;flex:none}
+input[type=range]{width:96px;accent-color:var(--accent)}
+.hint{color:var(--muted);font-size:.74rem;line-height:1.35;flex:1 1 100%}
+.pal{flex:1 1 100%}
+.pal button{flex:none;width:34px;height:34px;background:transparent;border:1px solid var(--line);border-radius:6px;cursor:pointer;display:grid;place-items:center;padding:3px}
+.pal button.wide{width:56px}
+.pal button:hover{border-color:var(--accent)}
+.pal svg{width:100%;height:100%}
+.word{font-family:var(--display);font-weight:700;color:#8a2a3a;border:2px solid #8a2a3a;border-radius:999px;padding:.1em .6em;white-space:nowrap;line-height:1.3;display:inline-block}
+.pal .word{font-size:.68rem;border-width:1.5px}
+
+/* the book */
+.bookwrap{display:flex;justify-content:center}
+.book{position:relative;width:min(100%,max(560px,calc((100dvh - 215px) * 1.4)));background:var(--cover);border-radius:8px;padding:10px;box-shadow:0 14px 30px var(--shadow)}
+.one .book{width:min(100%,460px)}
+.spread{position:relative;perspective:2400px;display:grid;grid-template-columns:1fr 1fr;background:var(--gilt);padding:0 3px 3px;border-radius:3px}
+.leaf,.still{position:absolute;pointer-events:none}
+.still{z-index:5}
+.leaf{z-index:6;transform-style:preserve-3d}
+.strip{position:absolute;top:0;height:100%;overflow:hidden;background:var(--paper,#f6f0dc);will-change:transform}
+.face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--paper,#f6f0dc)}
+.face.back{transform:rotateY(180deg)}
+.hold{position:absolute;top:0;height:100%}
+.shade{position:absolute;inset:0;opacity:0}
+.still>.page,.hold>.page{width:100%;height:100%;aspect-ratio:auto}
+.one .spread{grid-template-columns:1fr}
+.ribbon{position:absolute;left:50%;top:6px;bottom:-22px;width:12px;margin-left:10px;background:var(--accent);opacity:.9;z-index:5;pointer-events:none;clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 8px),0 100%)}
+.one .ribbon{left:auto;right:34px}
+/* Every page is laid out at one fixed size (600 x 840) and scaled to fit the screen, so its text wraps
+   at exactly the same places on every device and at every book size. */
+.page{position:relative;aspect-ratio:5/7;max-width:100%;background:var(--paper,#f6f0dc);color:var(--ink,#2b2622);overflow:hidden;min-width:0}
+.pg{position:absolute;left:0;top:0;width:600px;height:840px;transform-origin:0 0;transform:scale(var(--k,1));container-type:inline-size;display:flex;flex-direction:column;padding:36px 48px 24px}
+.page.left{box-shadow:inset -22px 0 26px -18px rgba(0,0,0,.35)}
+.page.right{box-shadow:inset 22px 0 26px -18px rgba(0,0,0,.35)}
+.one .page{box-shadow:inset 14px 0 20px -14px rgba(0,0,0,.3)}
+.ref{position:relative;z-index:1;border:0;border-bottom:1px solid var(--rule);background:transparent;color:inherit;font-family:var(--display);font-weight:700;font-size:3.4cqw;padding:0 0 1.2cqw;margin-bottom:3cqw;width:100%;border-radius:0}
+.ref::placeholder,.txt::placeholder{color:inherit;opacity:.38}
+.txt{position:relative;z-index:1;flex:none;min-height:0;width:100%;border:0;resize:none;overflow:hidden;padding:0;background-color:transparent;color:inherit;
+  font-family:var(--ff);font-size:var(--fpx,calc(var(--fs) * 100cqw / 600));line-height:var(--lh,1.9);border-radius:0}
+.txt:focus,.ref:focus{outline:none}
+/* the line pitch is a whole number of pixels (--lh, set by script) and the rule is one tile of exactly that
+   height, so text lines and rules cannot drift apart further down the page */
+.lines-rule .txt{background-image:linear-gradient(transparent calc(100% - var(--hair,1px)),var(--rule) calc(100% - var(--hair,1px)));background-size:100% var(--lh,1.9em)}
+.lines-grid .txt{background-image:linear-gradient(transparent calc(100% - var(--hair,1px)),var(--rule) calc(100% - var(--hair,1px))),linear-gradient(90deg,transparent calc(100% - var(--hair,1px)),var(--rule) calc(100% - var(--hair,1px)));background-size:var(--lh,1.9em) var(--lh,1.9em)}
+.ink,.stickers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ink{z-index:2}.stickers{z-index:3}
+.pno{position:relative;z-index:1;margin-top:auto;text-align:center;font-size:2.6cqw;opacity:.55;padding-top:1.5cqw;font-variant-numeric:tabular-nums}
+.page.active .pno{opacity:1;font-weight:700}
+.fullmsg{display:none;font-family:var(--ui);font-weight:700}
+.page.isfull .fullmsg{display:inline}.page.isfull .num{display:none}
+.page.isfull .pno{opacity:1}
+.stk{position:absolute;transform-origin:center;line-height:0;user-select:none;-webkit-user-select:none}
+.stk svg{width:100%;height:auto;display:block}
+.stk .word{line-height:1.3}
+.stk .hd{display:none;position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid #fff;transform:translate(-50%,-50%);cursor:ew-resize;touch-action:none}
+.stk .hd.l{left:0}.stk .hd.r{left:100%}
+body[data-mode="sticker"] .stk.sel .hd{display:block}
+.stk.sel{outline:1.5px dashed var(--accent);outline-offset:3px}
+body.notype .txt,body.notype .ref{pointer-events:none}
+body[data-mode="pen"] .ink,body[data-mode="erase"] .ink{pointer-events:auto;touch-action:none;cursor:crosshair}
+body[data-mode="pen"] .page,body[data-mode="erase"] .page{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+body[data-mode="sticker"] .stk{pointer-events:auto;touch-action:none;cursor:grab}
+.stage{display:flex;flex-direction:column;gap:10px;min-width:0}
+.stage>.bookwrap{flex:1;min-width:0}
+body[data-dock="bottom"] .stage{flex-direction:column-reverse}
+@media (min-width:900px){
+  body[data-dock="left"] .stage{flex-direction:row;align-items:flex-start}
+  body[data-dock="right"] .stage{flex-direction:row-reverse;align-items:flex-start}
+  body[data-dock="left"] .tools,body[data-dock="right"] .tools{flex:none;width:236px;max-height:calc(100dvh - 64px);overflow-y:auto;position:sticky;top:8px}
+  body[data-dock="left"] .scroll,body[data-dock="right"] .scroll{flex-wrap:wrap;overflow:visible}
+  body[data-dock="left"] .tabs button,body[data-dock="right"] .tabs button{font-size:.78rem;padding:5px 2px}
+  body[data-dock="left"] .book,body[data-dock="right"] .book{width:min(100%,calc((100dvh - 76px) * 1.4))}
+}
+@media (max-width:899px){.dock .side{display:none}}
+body.view .dock{display:none}
+.edge{position:absolute;top:0;bottom:0;width:max(22px,3.5%);z-index:7;border:0;padding:0;background:transparent;cursor:pointer;border-radius:8px}
+.edge.l{left:0}.edge.r{right:0}
+.edge:hover,.edge:focus-visible{background:linear-gradient(to right,color-mix(in srgb,var(--gilt) 45%,transparent),transparent)}
+.edge.r:hover,.edge.r:focus-visible{background:linear-gradient(to left,color-mix(in srgb,var(--gilt) 45%,transparent),transparent)}
+.edge:disabled{cursor:default;background:transparent}
+body.view .tools,body.view #book-title,body.view #status{display:none}
+body.view .top{justify-content:center}
+body.view .book{width:min(100%,calc((100dvh - 120px) * 1.4))}
+body.view .one .book{width:min(100%,calc((100dvh - 120px) * .7))}
+body.view .txt,body.view .ref,body.view .ink,body.view .stk{pointer-events:none!important}
+body.view .page.isfull .fullmsg{display:none}body.view .page.isfull .num{display:inline}body.view .page.isfull .pno{opacity:.55}
+body.view .txt::placeholder,body.view .ref::placeholder{opacity:0}
+body.view .page.active .pno{opacity:.55;font-weight:400}
+/* full view: nothing but the book, as large as the screen allows */
+body.view .wrap{max-width:none;padding-inline:0;padding-block:0;gap:0;min-height:100dvh;justify-content:center}
+body.view .nav{display:none}
+body.view .top{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));right:8px;z-index:30}
+body.view #viewbtn{opacity:.4}
+body.view #viewbtn:hover,body.view #viewbtn:focus-visible{opacity:1}
+body.view .book{width:min(100%,calc((100dvh - 26px) * 1.428));border-radius:0;box-shadow:none}
+body.view .one .book{width:min(100%,calc((100dvh - 26px) * .714))}
+body.view .ribbon{bottom:2px}
+/* menus hidden: the book fills the screen but stays fully editable */
+body.bare .tools,body.bare #book-title,body.bare #status,body.bare .dock,body.bare .nav,body.bare #viewbtn{display:none}
+body.bare .wrap{max-width:none;padding-inline:0;padding-block:0;gap:0;min-height:100dvh;justify-content:center}
+body.bare .top{position:fixed;top:calc(6px + env(safe-area-inset-top,0px));right:8px;z-index:30}
+body.bare #hidebtn{opacity:.45}
+body.bare #hidebtn:hover,body.bare #hidebtn:focus-visible{opacity:1}
+body.bare .book{width:min(100%,calc((100dvh - 26px) * 1.428));border-radius:0;box-shadow:none}
+body.bare .one .book{width:min(100%,calc((100dvh - 26px) * .714))}
+body.bare .ribbon{bottom:2px}
+body.view #hidebtn{display:none}
+#toc,.sheet{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.4);display:flex;justify-content:center;align-items:flex-start;padding:max(16px,8dvh) 16px 16px}
+.tocbox{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;width:min(460px,100%);max-height:80dvh;display:flex;flex-direction:column;box-shadow:0 14px 30px var(--shadow)}
+.tochead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);font-family:var(--display);font-weight:700;font-size:1.05rem}
+.toclist{overflow-y:auto;padding:10px 14px 14px;display:flex;flex-direction:column;gap:12px}
+.tocch{display:flex;flex-direction:column;gap:5px;min-width:0}
+.chap{background:none;border:0;border-bottom:1px solid var(--line);padding:3px 0;text-align:left;font-family:var(--display);font-weight:700;font-size:1rem;cursor:pointer;display:flex;justify-content:space-between;gap:12px;min-width:0}
+.chap span:first-child{min-width:0;overflow-wrap:anywhere}
+.chap span:last-child{color:var(--muted);font-family:var(--ui);font-weight:400;font-size:.82rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chap:hover{color:var(--accent)}
+.tocv{display:flex;flex-wrap:wrap;gap:5px}
+.tocv .btn{font-variant-numeric:tabular-nums}
+.toclist [aria-current="true"]{border-color:var(--accent);color:var(--accent)}
+.tocnone{color:var(--muted);font-size:.9rem}
+body.bare #rrbtn,body.view #rrbtn{display:none}
+#rr .btn{font-size:.95rem;padding:6px 14px}
+body.bare #tocbtn{opacity:.45}body.view #tocbtn{opacity:.4}
+body.bare #tocbtn:hover,body.view #tocbtn:hover{opacity:1}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--desk);padding:8px 14px;border-radius:6px;z-index:20;max-width:calc(100% - 32px)}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <input id="book-title" aria-label="책 제목" maxlength="40">
+    <span id="status" role="status"></span>
+    <div class="group dock" role="group" aria-label="메뉴 위치"><span class="lbl">메뉴 위치</span>
+      <button class="btn" data-dock="top">위</button><button class="btn" data-dock="bottom">아래</button><button class="btn side" data-dock="left">왼쪽</button><button class="btn side" data-dock="right">오른쪽</button></div>
+    <button class="btn" id="tocbtn">목차</button>
+    <button class="btn" id="rrbtn">재배열</button>
+    <button class="btn" id="zoomreset" hidden>원래 크기</button>
+    <button class="btn" id="hidebtn" aria-pressed="false">메뉴 숨기기</button>
+    <button class="btn" id="viewbtn" aria-pressed="false">전체보기</button>
+    <div class="nav">
+      <button class="btn" id="prev" aria-label="앞 쪽">‹</button>
+      <span id="where"></span>
+      <button class="btn" id="next" aria-label="다음 쪽">›</button>
+    </div>
+  </div>
+
+  <div class="stage">
+  <div class="tools">
+    <div class="tabs" role="tablist">
+      <button role="tab" data-mode="type">글쓰기</button>
+      <button role="tab" data-mode="pen">펜</button>
+      <button role="tab" data-mode="sticker">스티커</button>
+      <button role="tab" data-mode="paper">종이·쪽</button>
+    </div>
+
+    <div class="panel" id="p-type">
+      <div class="scroll fonts" id="fonts"></div>
+      <div class="group"><span class="lbl">글자색</span><div class="scroll" id="ink-sw"></div><input type="color" id="ink-custom" aria-label="글자색 직접 고르기"></div>
+      <div class="group"><label for="size">크기</label><input type="range" id="size" min="12" max="44" step="1"><span id="size-v"></span></div>
+      <div class="group"><button class="btn" id="verse" aria-pressed="true">절 번호 자동</button></div>
+      <div class="hint">절 번호 자동을 켜 두면 엔터를 칠 때 다음 절 번호가 적힙니다. 번호만 있는 줄에서 엔터를 치면 번호가 지워집니다. 꽉 찬 쪽에서 엔터를 치면 번호 없이 다음 쪽에 이어 쓰고, 거기서 바로 엔터를 한 번 더 치면 다음 절 번호가 붙습니다.</div>
+    </div>
+
+    <div class="panel" id="p-pen" hidden>
+      <div class="group"><span class="lbl">펜 색</span><div class="scroll" id="pen-sw"></div><input type="color" id="pen-custom" aria-label="펜 색 직접 고르기"></div>
+      <div class="group"><label for="pen-w">굵기</label><input type="range" id="pen-w" min="1" max="12" step="1" value="3"></div>
+      <div class="group"><button class="btn" id="hl" aria-pressed="false">형광펜</button><button class="btn" id="eraser" aria-pressed="false">지우개</button><button class="btn" id="undo">한 획 되돌리기</button><button class="btn" id="clear">이 쪽 손글씨 지우기</button></div>
+      <div class="hint">손가락, 마우스, 펜으로 쪽 위에 바로 쓰세요. 지우개를 켜고 획 위를 문지르면 그 획이 통째로 지워집니다. 두 손가락을 벌리거나 오므리면 책이 확대·축소되고, 두 손가락으로 끌면 확대된 책이 움직입니다.</div>
+    </div>
+
+    <div class="panel" id="p-sticker" hidden>
+      <div class="scroll pal" id="pal"></div>
+      <div class="group"><button class="btn" id="s-small">작게</button><button class="btn" id="s-big">크게</button><button class="btn" id="s-rot">돌리기</button><button class="btn" id="s-del">떼어내기</button></div>
+      <div class="hint">스티커를 누르면 지금 쪽에 붙습니다. 끌어서 옮기고, 눌러서 고른 뒤 크기를 바꾸세요. 띠 모양 스티커는 고르면 양 끝에 점이 생기고, 그 점을 끌면 길이가 바뀝니다. 띠의 작게·크게는 두께를 바꿉니다.</div>
+    </div>
+
+    <div class="panel" id="p-paper" hidden>
+      <div class="group"><span class="lbl">바탕색</span><div class="scroll" id="paper-sw"></div><input type="color" id="paper-custom" aria-label="바탕색 직접 고르기"></div>
+      <div class="group"><span class="lbl">줄</span>
+        <button class="btn" data-lines="rule">줄 노트</button><button class="btn" data-lines="grid">모눈</button><button class="btn" data-lines="none">무지</button></div>
+      <div class="group"><span class="lbl">빈 쪽 넣기</span>
+        <button class="btn" id="ins-before">지금 쪽 앞에</button><button class="btn" id="ins-after">지금 쪽 뒤에</button></div>
+      <div class="group"><span class="lbl">빈 쪽 지우기</span>
+        <button class="btn" id="del-here">지금 펼친 빈 쪽</button><button class="btn" id="del-all">빈 쪽 모두</button></div>
+      <div class="hint">빈 쪽은 두 쪽(한 장)씩 넣고 지웁니다. 맨 앞에 넣으려면 첫 쪽에서 '지금 쪽 앞에'를 누르세요. 글, 손글씨, 스티커, 직접 적은 장절이 있는 쪽은 지워지지 않습니다.</div>
+    </div>
+  </div>
+
+  <div class="bookwrap" id="bookwrap">
+    <div class="book"><div class="ribbon"></div><div class="spread" id="spread"></div>
+      <button class="edge l" id="edge-l" aria-label="앞 쪽으로"></button><button class="edge r" id="edge-r" aria-label="다음 쪽으로"></button></div>
+  </div>
+  </div>
+</div>
+<div id="toc" hidden><div class="tocbox" role="dialog" aria-label="목차">
+  <div class="tochead"><span>목차</span><button class="btn" id="tocclose">닫기</button></div>
+  <div class="toclist" id="toclist"></div>
+</div></div>
+<div id="rr" class="sheet" hidden><div class="tocbox" role="dialog" aria-label="재배열">
+  <div class="tochead"><span>재배열</span><button class="btn" id="rrclose">닫기</button></div>
+  <div class="toclist">
+    <p class="tocnone">쪽 아래에 남은 빈 줄을 다음 쪽 글로 당겨 채우고, 그러면서 비게 된 쪽을 없앱니다. 글 내용은 바뀌지 않고 놓이는 쪽만 바뀝니다. 손글씨와 스티커는 제자리에 남습니다.</p>
+    <div class="tocv"><button class="btn" id="rrhere">지금 쪽부터</button><button class="btn" id="rrall">책 전체</button></div>
+    <p class="tocnone" id="rrnote"></p>
+  </div>
+</div></div>
+<div id="toast" hidden></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const FONTS=[
+  {id:'myeongjo',n:'나눔명조',css:"'Nanum Myeongjo',serif"},
+  {id:'gowunb',n:'고운바탕',css:"'Gowun Batang',serif"},
+  {id:'songmyung',n:'송명',css:"'Song Myung',serif"},
+  {id:'gowund',n:'고운돋움',css:"'Gowun Dodum',sans-serif"},
+  {id:'pen',n:'손글씨 펜',css:"'Nanum Pen Script',cursive"},
+  {id:'brush',n:'손글씨 붓',css:"'Nanum Brush Script',cursive"},
+  {id:'gaegu',n:'개구',css:"'Gaegu',cursive"},
+  {id:'himelody',n:'하이멜로디',css:"'Hi Melody',cursive"},
+  {id:'gamja',n:'감자꽃',css:"'Gamja Flower',cursive"},
+  {id:'poor',n:'푸어스토리',css:"'Poor Story',cursive"},
+];
+const INKS=['#2b2622','#1f3a5f','#6b2d2d','#2f5d46','#7a4b1c','#b03a48','#5a4a8a','#f4efe4'];
+const PENS=['#2b2622','#1f3a5f','#b03a48','#2f5d46','#5a4a8a','#f2c200','#ff8fab','#7ed6a5'];
+const PAPERS=[['#f6f0dc','미색'],['#ffffff','백색'],['#f7e4e1','연분홍'],['#e2ecf3','연하늘'],['#e6eedd','연두'],['#d9c3a0','크라프트'],['#26282c','먹지']];
+const V='viewBox="0 0 48 48"';
+const STK={
+  cross:{s:10,svg:`<svg ${V}><path d="M20 4h8v12h12v8H28v20h-8V24H8v-8h12z" fill="#8a5a2b"/></svg>`},
+  heart:{s:10,svg:`<svg ${V}><path d="M24 42S6 30 6 17a9 9 0 0 1 18-3 9 9 0 0 1 18 3c0 13-18 25-18 25z" fill="#d6455d"/></svg>`},
+  star:{s:10,svg:`<svg ${V}><path d="M24 4l6 13 14 2-10 10 2 14-12-7-12 7 2-14L4 19l14-2z" fill="#f0b429"/></svg>`},
+  fish:{s:14,svg:`<svg ${V}><path d="M5 24C15 9 31 9 43 32M5 24c10 15 26 15 38-8" fill="none" stroke="#2f6f8f" stroke-width="3.5" stroke-linecap="round"/></svg>`},
+  flower:{s:11,svg:`<svg ${V}><g fill="#e58fb0"><circle cx="24" cy="14" r="7"/><circle cx="33.5" cy="20.9" r="7"/><circle cx="29.9" cy="32.1" r="7"/><circle cx="18.1" cy="32.1" r="7"/><circle cx="14.5" cy="20.9" r="7"/></g><circle cx="24" cy="24" r="5" fill="#f6d365"/></svg>`},
+  olive:{s:13,svg:`<svg ${V}><path d="M8 42C18 30 30 18 42 6" stroke="#4d7a4d" stroke-width="2.5" fill="none" stroke-linecap="round"/><g fill="#6fa36f"><ellipse cx="14" cy="26" rx="7" ry="3.2" transform="rotate(-75 14 26)"/><ellipse cx="25" cy="34" rx="7" ry="3.2" transform="rotate(-10 25 34)"/><ellipse cx="23" cy="15" rx="7" ry="3.2" transform="rotate(-75 23 15)"/><ellipse cx="35" cy="23" rx="7" ry="3.2" transform="rotate(-10 35 23)"/></g></svg>`},
+  crown:{s:11,svg:`<svg ${V}><path d="M6 34L4 12l11 9 9-15 9 15 11-9-2 22z" fill="#e0a82e"/><rect x="6" y="36" width="36" height="6" rx="2" fill="#c98d1c"/></svg>`},
+  candle:{s:9,svg:`<svg ${V}><rect x="18" y="20" width="12" height="24" rx="2" fill="#f3e3c2" stroke="#c9b48a"/><path d="M24 4c5 6 5 10 0 14-5-4-5-8 0-14z" fill="#f59e0b"/></svg>`},
+  rainbow:{s:13,svg:`<svg ${V}><g fill="none" stroke-width="5"><path d="M5 38a19 19 0 0 1 38 0" stroke="#e25555"/><path d="M11 38a13 13 0 0 1 26 0" stroke="#f0b429"/><path d="M17 38a7 7 0 0 1 14 0" stroke="#4a90c2"/></g></svg>`},
+  check:{s:8,svg:`<svg ${V}><circle cx="24" cy="24" r="20" fill="#3f8f5f"/><path d="M14 25l7 7 13-15" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`},
+  mark:{s:8,svg:`<svg ${V}><path d="M12 4h24v40l-12-9-12 9z" fill="#7a2231"/></svg>`},
+  tapeY:{s:34,h:5.6,fill:'rgba(245,213,71,.55)',wide:1,svg:`<svg viewBox="0 0 96 16"><rect width="96" height="16" fill="#f5d547" opacity=".55"/></svg>`},
+  tapeP:{s:34,h:5.6,fill:'rgba(255,157,181,.5)',wide:1,svg:`<svg viewBox="0 0 96 16"><rect width="96" height="16" fill="#ff9db5" opacity=".5"/></svg>`},
+  tapeG:{s:34,h:5.6,fill:'rgba(143,214,176,.5)',wide:1,svg:`<svg viewBox="0 0 96 16"><rect width="96" height="16" fill="#8fd6b0" opacity=".5"/></svg>`},
+  amen:{s:14,t:'아멘'},grace:{s:14,t:'은혜'},thanks:{s:14,t:'감사'},medit:{s:14,t:'묵상'},memo:{s:14,t:'암송'},pray:{s:14,t:'기도'},
+};
+const KEY='pilsa-book-v1';
+const blank=f=>({ref:'',text:'',font:f?.font||'myeongjo',color:f?.color||'#2b2622',size:f?.size||20,strokes:[],stickers:[],t:0});
+let S={book:{title:'나만의 성경 필사',paper:'#f6f0dc',lines:'rule',t:0},pages:[blank(),blank()]};
+let mode='type',start=0,active=0,per=2,sel=null;
+let pen={c:PENS[0],w:3,hl:false};
+let store=null;
+
+/* ---------- saving ---------- */
+const dirtyP=new Set(),delP=new Set();let dirtyB=false,timer=0,saving=false,again=false;
+const status=t=>$('#status').textContent=t;
+function toast(t){const e=$('#toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,3500)}
+function touch(i){S.pages[i].t=Date.now();dirtyP.add(i);schedule()}
+function touchBook(){S.book.t=Date.now();dirtyB=true;schedule()}
+function schedule(){status('저장 중…');clearTimeout(timer);timer=setTimeout(flush,900)}
+function saveLocal(){try{localStorage.setItem(KEY,JSON.stringify(S));return true}catch(e){return false}}
+async function flush(){
+  const local=saveLocal();
+  if(!store){dirtyP.clear();dirtyB=false;status(local?'이 기기에만 저장됨':'저장할 수 없음');return}
+  if(saving){again=true;return}
+  saving=true;let ok=true;
+  try{
+    if(dirtyB){dirtyB=false;await store.book.set({...S.book,count:S.pages.length})}
+    for(const i of [...dirtyP]){
+      dirtyP.delete(i);const body=S.pages[i];if(!body)continue;
+      if(JSON.stringify(body).length>240000){ok=false;toast((i+1)+'쪽에 손글씨가 너무 많습니다. 다음 쪽에 이어 써 주세요.');continue}
+      await store.pages.doc('p'+i).set(body);
+    }
+    for(const i of [...delP]){delP.delete(i);if(i>=S.pages.length)await store.pages.doc('p'+i).delete()}
+  }catch(e){ok=false;if(e&&e.code==='quota_exceeded')toast('저장 공간이 가득 찼습니다.')}
+  saving=false;
+  status(ok?'저장됨':(local?'이 기기에만 저장됨':'저장하지 못함'));
+  if(again||dirtyP.size||dirtyB||(ok&&delP.size)){again=false;schedule()}
+}
+function loadLocal(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.book&&Array.isArray(j.pages)&&j.pages.length)S=j}catch(e){}}
+async function connect(){
+  if(!window.claude||!window.claude.use){status('이 기기에만 저장됨');return}
+  try{
+    const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+    const uid=db&&user?await user.id():null;
+    if(!uid){status('이 기기에만 저장됨');return}
+    const book=db.doc('data/users/'+uid+'/book'),pages=book.collection('pages');
+    const [b,q]=await Promise.all([book.get(),pages.limit(1000).get()]);
+    store={book,pages};
+    let changed=false;
+    const localNewer=b.exists&&(b.data().t||0)<(S.book.t||0),localLen=S.pages.length;
+    if(b.exists){const d=b.data();
+      if((d.t||0)>=(S.book.t||0)){S.book={title:d.title||S.book.title,paper:d.paper||S.book.paper,lines:d.lines||S.book.lines,verse:d.verse!==false,t:d.t||0};changed=true}
+      else dirtyB=true;
+      if(!localNewer)while(S.pages.length<(d.count||0))S.pages.push(blank());
+    }else dirtyB=true;
+    const seen=new Set();
+    for(const doc of q.docs){
+      const i=parseInt(doc.id.slice(1),10);if(!(i>=0))continue;
+      if(localNewer&&i>=localLen){delP.add(i);continue}
+      seen.add(i);
+      while(S.pages.length<=i)S.pages.push(blank());
+      const d=doc.data();
+      if((d.t||0)>=(S.pages[i].t||0)){S.pages[i]={...blank(),...JSON.parse(JSON.stringify(d))};changed=true}
+      else dirtyP.add(i);
+    }
+    S.pages.forEach((p,i)=>{if(p.t&&!seen.has(i))dirtyP.add(i)});
+    if(S.pages.length%2)S.pages.push(blank());
+    if(changed&&!document.activeElement.matches('.txt,.ref,#book-title')){renderAll();settleSoon()}
+    if(dirtyB||dirtyP.size||delP.size)schedule();else status('저장됨');
+  }catch(e){status('이 기기에만 저장됨')}
+}
+
+/* ---------- pages ---------- */
+const pageEl=i=>document.querySelector('.page[data-i="'+i+'"]');
+const fontCss=id=>(FONTS.find(f=>f.id===id)||FONTS[0]).css;
+const ro=new ResizeObserver(es=>{for(const e of es)sizeCanvas(+e.target.dataset.i)});
+function isDark(hex){const n=parseInt(hex.slice(1),16);return ((n>>16)*299+((n>>8)&255)*587+(n&255)*114)/1000<110}
+function applyBook(){
+  if(S.book.title==='나의 필사 성경')S.book.title='나만의 성경 필사';
+  $('#book-title').value=S.book.title;
+  const w=$('#bookwrap');
+  w.style.setProperty('--paper',S.book.paper);
+  w.style.setProperty('--rule',isDark(S.book.paper)?'rgba(255,255,255,.2)':'rgba(70,50,30,.22)');
+  w.className='bookwrap lines-'+S.book.lines+(per===1?' one':'');
+  document.querySelectorAll('#paper-sw .sw').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===S.book.paper));
+  $('#paper-custom').value=S.book.paper;
+  $('#verse').setAttribute('aria-pressed',S.book.verse!==false);
+  document.querySelectorAll('[data-lines]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lines===S.book.lines));
+}
+/* Every device gets the same number of lines on a page: the count depends only on the letter size,
+   the line pitch is the whole number of pixels that fits that many lines, and the writing area is
+   exactly that tall, so nothing can be written below the last rule. */
+function metrics(el,p){
+  const w=el.clientWidth;if(!w)return;
+  const g=el.querySelector('.pg'),t=el.querySelector('.txt'),ref=el.querySelector('.ref'),pn=el.querySelector('.pno'),cs=getComputedStyle(g),k=w/600;
+  el.style.setProperty('--k',k.toFixed(5));el.style.setProperty('--hair',Math.max(1,1/k).toFixed(2)+'px');
+  const avail=840-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-ref.offsetHeight-(parseFloat(getComputedStyle(ref).marginBottom)||0)-pn.offsetHeight;
+  const n=Math.max(1,Math.floor(690/(p.size*1.9))),lh=Math.max(1,Math.floor(avail/n));
+  el.style.setProperty('--fpx',p.size+'px');el.style.setProperty('--lh',lh+'px');
+  t.style.height=n*lh+'px';
+}
+function stylePage(i){const el=pageEl(i),p=S.pages[i];if(!el)return;
+  el.style.setProperty('--fs',p.size);metrics(el,p);el.style.setProperty('--ink',p.color);el.style.setProperty('--ff',fontCss(p.font));
+  requestAnimationFrame(()=>checkFull(i))}
+function checkFull(i){
+  const el=pageEl(i);if(!el)return;const t=el.querySelector('.txt');let full=t.scrollHeight>t.clientHeight+2;
+  if(!full&&t.value){const m=measurer(i),x=m.querySelector('.txt');x.value=t.value+'x\nx';full=x.scrollHeight>x.clientHeight+2;m.remove()}
+  el.classList.toggle('isfull',full);
+}
+function makePage(i){
+  const p=S.pages[i],el=document.createElement('article');
+  el.className='page '+(i%2?'right':'left');el.dataset.i=i;
+  el.innerHTML='<div class="pg"><input class="ref" id="ref-'+i+'" maxlength="40" aria-label="'+(i+1)+'쪽 본문 장절" placeholder="'+(i?'장:절':'예) 시편 23:1–6')+'">'+
+    '<textarea class="txt" id="txt-'+i+'" spellcheck="false" aria-label="'+(i+1)+'쪽 필사" placeholder="'+(i?'':'여기에 말씀을 옮겨 적어 보세요.')+'"></textarea>'+
+    '<canvas class="ink"></canvas><div class="stickers"></div><div class="pno"><span class="num">'+(i+1)+'</span><span class="fullmsg">이 쪽이 가득 찼습니다. 다음 쪽에 이어 쓰세요.</span></div></div>';
+  const ref=el.querySelector('.ref'),txt=el.querySelector('.txt'),cv=el.querySelector('.ink');
+  ref.value=p.ref;txt.value=p.text;
+  ref.addEventListener('input',()=>{S.pages[i].ref=ref.value;S.pages[i].auto=false;touch(i);carry(i+1)});
+  txt.addEventListener('input',e=>{const br=e.inputType==='insertLineBreak';if(br&&S.book.verse!==false)verseBreak(txt,i);if(br&&!nextBusy(i)&&spill(txt,i))return;S.pages[i].text=txt.value;checkFull(i);touch(i);carry(i+1);
+    if(!e.isComposing)setTimeout(()=>{if(!comp&&document.activeElement===txt)reflow(i,txt)},0)});
+  /* Backspace at the very top of a page joins its text onto the empty lines of the page before it */
+  let backAt=0;
+  const joinBack=e=>{
+    if(i<1||flipping||txt.selectionStart!==0||txt.selectionEnd!==0||e.isComposing)return;
+    e.preventDefault();if(Date.now()-backAt<300)return;backAt=Date.now();
+    pullBack(i);
+  };
+  txt.addEventListener('keydown',e=>{if(e.key==='Backspace')joinBack(e)});
+  txt.addEventListener('beforeinput',e=>{if(e.inputType==='deleteContentBackward')joinBack(e)});
+  /* the writing area never scrolls inside itself: what does not fit belongs on the next page */
+  txt.addEventListener('scroll',()=>{if(txt.scrollTop)txt.scrollTop=0});
+  /* text hanging below the last line is never left hidden: the moment the page is tapped it moves on */
+  for(const ev of ['focus','click'])txt.addEventListener(ev,()=>setTimeout(()=>{if(document.activeElement===txt&&!comp&&!flipping&&!fits(txt))reflow(i,txt)},60));
+  let comp=false;
+  txt.addEventListener('compositionstart',()=>comp=true);txt.addEventListener('compositionend',()=>comp=false);
+  el.addEventListener('pointerdown',()=>setActive(i),true);
+  el.addEventListener('focusin',()=>setActive(i));
+  inkEvents(cv,i);
+  return el;
+}
+function renderAll(){
+  ro.disconnect();sel=null;
+  if(start>=S.pages.length)start=0;
+  if(active<start||active>=start+per)active=start;
+  const sp=$('#spread');sp.innerHTML='';
+  for(let i=start;i<start+per;i++)carry(i);
+  for(let i=start;i<start+per&&i<S.pages.length;i++){sp.append(makePage(i))}
+  applyBook();
+  for(let i=start;i<start+per&&i<S.pages.length;i++){stylePage(i);renderStickers(i);ro.observe(pageEl(i))}
+  whereLabel();
+  $('#prev').disabled=$('#edge-l').disabled=start===0;
+  setActive(active);
+}
+function insertPages(at){
+  const from=S.pages[Math.max(0,at-1)]||S.pages[0];
+  S.pages.splice(at,0,blank(from),blank(from));
+  for(let i=at;i<S.pages.length;i++)touch(i);
+  touchBook();
+}
+function addSpread(off){
+  if(flipping)return;
+  const at=Math.min(S.pages.length,start-start%2+off);
+  insertPages(at);start=active=at;renderAll();
+  toast((at+1)+'–'+(at+2)+'쪽에 빈 쪽을 넣었습니다.');
+}
+const isBlank=p=>!p.text.trim()&&!p.strokes.length&&!p.stickers.length&&!(p.ref&&!p.auto);
+const blankPair=at=>isBlank(S.pages[at])&&isBlank(S.pages[at+1]);
+function removePairs(list){
+  const old=S.pages.length,cur=start-start%2;let before=0;
+  for(const at of list){S.pages.splice(at,2);if(at<cur)before++}
+  for(let i=list[list.length-1];i<S.pages.length;i++)touch(i);
+  for(let i=S.pages.length;i<old;i++){delP.add(i);dirtyP.delete(i)}
+  touchBook();
+  start=active=Math.max(0,Math.min(cur-2*before,S.pages.length-2));renderAll();
+}
+function delHere(){
+  if(flipping)return;const at=start-start%2;
+  if(!blankPair(at)){toast('펼친 두 쪽이 모두 비어 있어야 지울 수 있습니다.');return}
+  if(S.pages.length<=2){toast('마지막 남은 한 장은 지울 수 없습니다.');return}
+  removePairs([at]);toast('빈 쪽 두 쪽을 지웠습니다.');
+}
+function delAll(){
+  if(flipping)return;const list=[];
+  for(let at=S.pages.length-2;at>=0;at-=2)if(blankPair(at))list.push(at);
+  if(list.length*2>=S.pages.length)list.pop();
+  if(!list.length){toast('지울 빈 쪽이 없습니다.');return}
+  removePairs(list);toast('빈 쪽 '+list.length*2+'쪽을 지웠습니다.');
+}
+/* ---------- table of contents: built from the chapter:verse heading of each page ---------- */
+function jump(i){
+  $('#toc').hidden=true;if(flipping)return;
+  const n=per===2?i-i%2:i;
+  if(n!==start)turnTo(n,n>start?1:-1);
+  setActive(i);
+}
+function openToc(){
+  const list=$('#toclist'),groups=[];let g=null;list.innerHTML='';
+  S.pages.forEach((p,i)=>{
+    const ref=(p.ref||'').trim();if(!ref)return;
+    const c=ref.indexOf(':'),base=(c>0?ref.slice(0,c):ref).trim(),v=c>0?ref.slice(c+1).trim():'';
+    if(!g||g.base!==base){g={base,items:[]};groups.push(g)}
+    g.items.push({i,v});
+  });
+  const shown=i=>i>=start&&i<start+per;
+  if(!groups.length){const d=document.createElement('p');d.className='tocnone';
+    d.textContent="아직 장절이 적힌 쪽이 없습니다. 쪽 맨 위 칸에 '시편 23:1'처럼 적으면 여기에 나타납니다.";list.append(d)}
+  for(const gr of groups){
+    const box=document.createElement('div'),h=document.createElement('button'),a=document.createElement('span'),b=document.createElement('span');
+    box.className='tocch';h.className='chap';a.textContent=gr.base;
+    const first=gr.items[0].i,last=gr.items[gr.items.length-1].i;
+    b.textContent=first===last?(first+1)+'쪽':(first+1)+'–'+(last+1)+'쪽';
+    h.append(a,b);h.addEventListener('click',()=>jump(first));
+    if(gr.items.length===1&&shown(first))h.setAttribute('aria-current','true');
+    box.append(h);
+    if(gr.items.length>1){
+      const row=document.createElement('div');row.className='tocv';
+      for(const it of gr.items){const c=document.createElement('button');c.className='btn';
+        c.textContent=(it.v?it.v+'절':'이어서')+' · '+(it.i+1)+'쪽';
+        if(shown(it.i))c.setAttribute('aria-current','true');
+        c.addEventListener('click',()=>jump(it.i));row.append(c)}
+      box.append(row);
+    }
+    list.append(box);
+  }
+  $('#toc').hidden=false;
+  const cur=list.querySelector('[aria-current="true"]');if(cur)cur.scrollIntoView({block:'center'});
+}
+/* Re-flow the whole book: fill the foot of every page from the pages after it, then drop the pages left empty.
+   A page whose heading was typed by hand and names another book starts a new section and is not pulled up. */
+/* Does the top of page nx carry on the last line of the text before it? Older pages may be flagged as
+   continuing when they really begin with a new line (a heading), so check the text too: a verse number
+   at the top, or a finished sentence at the end of the text before, means a new line. */
+function fixCont(prev,nx){
+  if(!nx.cont)return;
+  if(/^\s*\d{1,3}[.\s]/.test(nx.text)||/[.!?"'”’」』)]\s*$/.test(prev)||/[다라요까죠네][.!?"'”’」』)]*\s*$/.test(prev))nx.cont=false;
+}
+const bookOf=r=>(r||'').replace(/[\s\d:.,~–—-]+(장|편|절)?$/,'').replace(/[\s\d:.,~–—-]+$/,'').trim();
+function rearrange(from){
+  from=from>0?from:0;
+  if(flipping)return;
+  if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  repaginate(false);
+  const hasInk=p=>p.strokes.length>0||p.stickers.length>0;
+  let book='',filled=0;
+  for(let k=0;k<S.pages.length;k++){
+    const p=S.pages[k];if(p.ref)book=bookOf(p.ref)||book;
+    if(k<from||!p.text.trim())continue;
+    const el=pageEl(k),m=el?null:measurer(k),t=(el||m).querySelector('.txt');t.value=p.text;let moved=false;
+    if(fits(t))for(let guard=0;guard<200;guard++){
+      let j=k+1;while(j<S.pages.length&&!S.pages[j].text.trim()&&!hasInk(S.pages[j]))j++;
+      if(j>=S.pages.length)break;
+      const nx=S.pages[j];if(!nx.text.trim())break;
+      if(nx.ref&&!nx.auto&&bookOf(nx.ref)!==book)break;
+      let full=false;fixCont(p.text,nx);
+      for(let n=0;n<5000&&nx.text.trim();n++){
+        const x=nx.text.search(/\s/),word=x<0?nx.text:nx.text.slice(0,x),rest=x<0?'':nx.text.slice(x+1);
+        if(word){
+          const cand=p.text.replace(/\s+$/,'')+(nx.cont?' ':'\n')+word;t.value=cand;
+          if(!fits(t)){t.value=p.text;full=true;break}
+          p.text=cand;moved=true;
+        }
+        nx.cont=!!rest&&x>=0&&nx.text[x]!=='\n';nx.text=rest;nx.auto=true;
+      }
+      touch(j);
+      if(full)break;
+      nx.text='';nx.cont=false;nx.ref='';nx.auto=true;
+    }
+    if(m)m.remove();if(moved){touch(k);filled++}
+  }
+  const old=S.pages.length;
+  let keep=S.pages.filter((p,i)=>i<from||p.text.trim()||hasInk(p)||(p.ref&&!p.auto));
+  if(!keep.length)keep=[blank()];
+  if(keep.length%2)keep.push(blank(keep[keep.length-1]));
+  const removed=old-keep.length;S.pages=keep;
+  for(let i=1;i<S.pages.length;i++){const q=S.pages[i];
+    if(!q.ref||q.auto){const r=nextRef(S.pages[i-1],q.cont);if(r){q.ref=r;q.auto=true}else if(q.auto&&!q.text.trim())q.ref=''}}
+  for(let i=0;i<S.pages.length;i++)touch(i);
+  for(let i=S.pages.length;i<old;i++){delP.add(i);dirtyP.delete(i)}
+  touchBook();
+  start=active=Math.max(0,Math.min(start-start%2,S.pages.length-2));renderAll();
+  toast(filled||removed>0?filled+'쪽의 아랫단을 채우고 빈 쪽 '+Math.max(0,removed)+'쪽을 없앴습니다.':'채울 빈 줄이 없습니다. 이미 가지런합니다.');
+}
+/* move as much of page i as fits onto the free lines at the foot of page i-1 */
+function pullBack(i){
+  const j=i-1,p=S.pages[j],nx=S.pages[i];
+  if(!nx.text.trim()){focusEnd(j);return}
+  const el=pageEl(j),m=el?null:measurer(j),t=(el||m).querySelector('.txt');t.value=p.text;let moved=false;
+  fixCont(p.text,nx);
+  if(fits(t))for(let n=0;n<5000&&nx.text.trim();n++){
+    const x=nx.text.search(/\s/),word=x<0?nx.text:nx.text.slice(0,x),rest=x<0?'':nx.text.slice(x+1);
+    if(word){
+      const base=p.text.replace(/\s+$/,''),cand=base?base+(nx.cont?' ':'\n')+word:word;t.value=cand;
+      if(!fits(t)){t.value=p.text;break}
+      p.text=cand;moved=true;
+    }
+    nx.cont=!!rest&&x>=0&&nx.text[x]!=='\n';nx.text=rest;
+  }
+  if(m)m.remove();
+  if(!moved){toast('앞 쪽에 빈 줄이 없습니다.');return}
+  if(!nx.text.trim()){nx.text='';nx.cont=false}
+  if(!nx.ref||nx.auto){const keep=nx.text;nx.text='';nx.ref='';nx.auto=true;carry(i);nx.text=keep}
+  touch(j);touch(i);
+  for(const k of [j,i]){const e=pageEl(k);if(e){e.querySelector('.txt').value=S.pages[k].text;e.querySelector('.ref').value=S.pages[k].ref;checkFull(k)}}
+  if(!nx.text)focusEnd(j);
+  else{const e=pageEl(i);if(e){const x=e.querySelector('.txt');x.focus({preventScroll:true});x.setSelectionRange(0,0)}}
+}
+function focusEnd(j){
+  if(!pageEl(j))turnTo(per===2?j-j%2:j,-1);
+  const el=pageEl(j);if(!el)return;
+  const x=el.querySelector('.txt');x.focus({preventScroll:true});x.setSelectionRange(x.value.length,x.value.length);setActive(j);
+}
+/* once the fonts are in, move anything that hangs below the last line on to the following page */
+let settleT=0;
+function settleSoon(){
+  clearTimeout(settleT);
+  settleT=setTimeout(async()=>{
+    try{if(document.fonts&&document.fonts.ready)await document.fonts.ready}catch(e){}
+    if(flipping||(document.activeElement&&document.activeElement.matches('.txt,.ref'))){settleSoon();return}
+    repaginate(false);
+  },400);
+}
+function whereLabel(){$('#where').textContent=(per===2?(start+1)+'–'+(start+2):(start+1))+' / '+S.pages.length+'쪽'}
+function setActive(i){
+  if(i!==active)select(null);
+  active=i;const p=S.pages[i];
+  document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',+e.dataset.i===i));
+  document.querySelectorAll('#fonts .btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===p.font));
+  document.querySelectorAll('#ink-sw .sw').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===p.color));
+  $('#ink-custom').value=p.color;$('#size').value=p.size;$('#size-v').textContent=p.size;
+}
+function lastVerse(t){let n=0,m;const re=/(?:^|\n)(\d{1,3})(?=[.\s])/g;while((m=re.exec(t)))n=+m[1];return n}
+function firstVerse(i){
+  const m=S.pages[i].ref.match(/:\s*(\d+)/);if(m)return +m[1];
+  for(let k=i-1;k>=0;k--){const n=lastVerse(S.pages[k].text+'\n');if(n)return n+1;if(S.pages[k].text.trim()||S.pages[k].ref.trim())break}
+  return 1;
+}
+function nextRef(q,cont){
+  const last=lastVerse(q.text+'\n'),ref=q.ref.trim();if(!ref)return '';
+  if(!last)return cont?ref:'';
+  const n=cont?last:last+1,c=ref.indexOf(':');
+  if(c>0)return ref.slice(0,c).trim()+':'+n;
+  return /\d$/.test(ref)?ref+':'+n:ref+' '+n+'절';
+}
+function carry(i){
+  if(i<1||i>=S.pages.length)return;const p=S.pages[i];
+  if(p.text.trim()||(p.ref&&!p.auto))return;
+  const r=nextRef(S.pages[i-1],p.cont);if(!r||r===p.ref)return;
+  p.ref=r;p.auto=true;touch(i);
+  const el=pageEl(i);if(el)el.querySelector('.ref').value=r;
+  carry(i+1);
+}
+function verseBreak(t,i){
+  const pos=t.selectionStart,v=t.value;if(pos!==t.selectionEnd||v[pos-1]!=='\n')return;
+  const before=v.slice(0,pos-1),ls=before.lastIndexOf('\n')+1,line=before.slice(ls);
+  const pg=S.pages[i];
+  if(pg.cont&&!before.trim()&&!v.slice(pos).trim()){
+    let b=i>0?lastVerse(S.pages[i-1].text+'\n'):0;
+    if(!b){const r=pg.ref.match(/:\s*(\d+)/);b=r?+r[1]:0}
+    if(!b)return;
+    pg.cont=false;pg.text='';carry(i);
+    t.value=(b+1)+' ';t.setSelectionRange(t.value.length,t.value.length);return;
+  }
+  const m=line.match(/^(\d{1,3})[.\s]?\s*(.*)$/);
+  if(m&&!m[2].trim()){t.setRangeText('',ls,pos,'end');return}
+  if(m){t.setRangeText((+m[1]+1)+' ',pos,pos,'end');return}
+  if(!line.trim())return;
+  const prev=lastVerse(before.slice(0,ls));
+  if(prev){t.setRangeText((prev+1)+' ',pos,pos,'end');return}
+  if(S.pages[i].cont){
+    let b=i>0?lastVerse(S.pages[i-1].text+'\n'):0;
+    if(!b){const r=S.pages[i].ref.match(/:\s*(\d+)/);b=r?+r[1]:0}
+    if(b)t.setRangeText((b+1)+' ',pos,pos,'end');
+    return;
+  }
+  const n=firstVerse(i),head=n+' ';
+  t.setRangeText((n+1)+' ',pos,pos,'end');t.setRangeText(head,ls,ls,'preserve');
+}
+
+/* a full page continues on the next page: Enter starts the next verse there,
+   words that run past the last line move over without a number */
+const fits=t=>t.scrollHeight<=t.clientHeight+2;
+const nextBusy=i=>i+1<S.pages.length&&!!S.pages[i+1].text.trim();
+/* trim the text in t to the longest whole-word beginning that fits; returns what was cut off.
+   A binary search, so it works however much text hangs below the page. */
+function cutOverflow(t){
+  const v=t.value,pos=[];
+  for(let i=1;i<v.length;i++){const c=v[i];if(c===' '||c==='\n')pos.push(i)}
+  let lo=0,hi=pos.length-1,best=-1;
+  while(lo<=hi){const mid=(lo+hi)>>1;t.value=v.slice(0,pos[mid]);if(fits(t)){best=mid;lo=mid+1}else hi=mid-1}
+  if(best<0){t.value=v;return null}
+  const cut=pos[best];t.value=v.slice(0,cut);
+  return {tail:v.slice(cut+1),sep:v[cut]};
+}
+function moveOn(i,tail,cont){
+  const j=i+1,q=S.pages[i];
+  if(j>=S.pages.length){for(let k=0;k<2;k++)S.pages.push(blank(q));touchBook()}
+  const p=S.pages[j];
+  if(!p.text.trim()){
+    if(!p.strokes.length){p.font=q.font;p.color=q.color;p.size=q.size}
+    p.cont=cont;carry(j);p.text=tail;touch(j);
+  }
+  const el=pageEl(j);
+  if(el){stylePage(j);el.querySelector('.txt').value=p.text;el.querySelector('.ref').value=p.ref}
+  else go(1);
+  const n=pageEl(j);
+  if(n){const x=n.querySelector('.txt');x.focus({preventScroll:true});x.setSelectionRange(x.value.length,x.value.length);setActive(j)}
+}
+function spill(t,i){
+  if(flipping||fits(t))return false;
+  const v=t.value;if(t.selectionStart<v.length)return false;
+  const nl=v.lastIndexOf('\n');if(nl<0)return false;
+  let tail=v.slice(nl+1),cont=false;if(!/^(\d{1,3} )?$/.test(tail))return false;
+  t.value=v.slice(0,nl);tail='';cont=true;
+  if(!fits(t)&&!nextBusy(i)){const r=cutOverflow(t);if(r)tail=r.tail}
+  S.pages[i].text=t.value;touch(i);checkFull(i);
+  moveOn(i,tail,cont);return true;
+}
+/* whatever no longer fits moves to the top of the next page, and so on down the book */
+/* An invisible copy of a page that is not on screen, used to see how its text lays out. It sits in a
+   box of exactly one page's size so its margins (percentages of that box) match a real page's. */
+function measurer(k){
+  const box=document.createElement('div'),m=document.createElement('article'),p=S.pages[k];
+  Object.assign(box.style,slot(document.querySelector('#spread > .page')));
+  box.style.position='absolute';box.style.visibility='hidden';box.style.pointerEvents='none';
+  m.className='page';m.style.width='100%';m.style.height='100%';m.style.aspectRatio='auto';
+  m.style.setProperty('--fs',p.size);m.style.setProperty('--ff',fontCss(p.font));
+  m.innerHTML='<div class="pg"><input class="ref" tabindex="-1"><textarea class="txt" tabindex="-1"></textarea><div class="pno"><span class="num">1</span></div></div>';
+  box.append(m);$('#spread').append(box);m.remove=()=>box.remove();
+  metrics(m,p);return m;
+}
+function reflow(i,live){
+  if(flipping)return;
+  let k=i,jump=null,ins=false;
+  for(let n=0;n<300;n++){
+    let t,m=null;
+    if((k===i&&live))t=live;
+    else{const el=pageEl(k);if(el)t=el.querySelector('.txt');else{m=measurer(k);t=m.querySelector('.txt')}t.value=S.pages[k].text}
+    if(fits(t)){if(m)m.remove();break}
+    const caret=(k===i&&live)?t.selectionStart:-1,r=cutOverflow(t);
+    if(!r){if(m)m.remove();break}
+    const cut=t.value.length;
+    if((k===i&&live)){if(caret<=cut)t.setSelectionRange(caret,caret);else jump=caret-cut-1}
+    S.pages[k].text=t.value;touch(k);if(m)m.remove();else checkFull(k);
+    const j=k+1,q=S.pages[k];
+    if(j>=S.pages.length){for(let x=0;x<2;x++)S.pages.push(blank(q));touchBook()}
+    let p=S.pages[j];
+    if(p.text.trim()&&p.ref&&!p.auto&&!p.cont){insertPages(j);p=S.pages[j];ins=true}
+    const had=p.text.trim();
+    if(!had&&!p.strokes.length){p.font=q.font;p.color=q.color;p.size=q.size}
+    const body=had?r.tail.replace(/\s+$/,'')+(p.cont?' ':'\n')+p.text:r.tail;
+    p.cont=r.sep!=='\n';
+    p.text='';carry(j);p.text=body;touch(j);
+    const el=pageEl(j);
+    if(el){stylePage(j);el.querySelector('.txt').value=p.text;el.querySelector('.ref').value=p.ref}
+    k=j;
+  }
+  if(ins){
+    const c=live?live.selectionStart:0;renderAll();
+    if(live&&jump===null){const el=pageEl(i);if(el){const x=el.querySelector('.txt');x.focus({preventScroll:true});x.setSelectionRange(c,c)}}
+  }
+  if(jump!==null){
+    const j=i+1;if(!pageEl(j))go(1);
+    const el=pageEl(j);
+    if(el){const x=el.querySelector('.txt'),o=Math.min(jump,x.value.length);x.focus({preventScroll:true});x.setSelectionRange(o,o);setActive(j)}
+  }
+  whereLabel();
+}
+
+/* after a size change: pull continued text back up where there is room, push what no longer fits */
+function repaginate(pull){
+  if(flipping)return;
+  for(let k=0;k<S.pages.length;k++){
+    const p=S.pages[k],el=pageEl(k),m=el?null:measurer(k),t=(el||m).querySelector('.txt');
+    t.value=p.text;let over=!fits(t);
+    if(pull!==false&&!over&&p.text.trim()){
+      const nx=S.pages[k+1];let moved=false;
+      /* a page whose heading was typed by hand is a deliberate new start: leave it where it is */
+      if(nx)fixCont(p.text,nx);
+      for(let n=0;n<3000&&nx&&nx.text&&(nx.cont||!nx.ref||nx.auto);n++){
+        const x=nx.text.search(/\s/),word=x<0?nx.text:nx.text.slice(0,x),rest=x<0?'':nx.text.slice(x+1);
+        if(word){
+          const cand=p.text.replace(/\s+$/,'')+(nx.cont?' ':'\n')+word;t.value=cand;
+          if(!fits(t)){t.value=p.text;break}
+          p.text=cand;
+        }
+        nx.cont=!!rest&&x>=0&&nx.text[x]!=='\n';
+        nx.text=rest;moved=true;
+      }
+      if(moved){
+        if(!nx.ref||nx.auto){const keep=nx.text;nx.text='';carry(k+1);nx.text=keep}
+        touch(k);touch(k+1);
+      }
+    }
+    if(m)m.remove();
+    if(over)reflow(k,null);
+  }
+  for(let i=start;i<start+per&&i<S.pages.length;i++){const el=pageEl(i);if(!el)continue;
+    el.querySelector('.txt').value=S.pages[i].text;el.querySelector('.ref').value=S.pages[i].ref;checkFull(i)}
+  whereLabel();
+}
+
+/* ---------- page turn ---------- */
+let flipping=false;
+/* A still picture of a page for the turning leaf. Form fields become plain text and every size is
+   frozen in pixels, so the copies never re-lay themselves out while the leaf is moving. */
+function snap(el){
+  const c=el.cloneNode(true),pg=S.pages[+el.dataset.i],view=document.body.classList.contains('view');
+  c.classList.remove('active','isfull');c.removeAttribute('data-i');c.querySelector('.pg').style.containerType='normal';
+  c.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));
+  const plain=(q,keep)=>{
+    const o=el.querySelector(q),n=c.querySelector(q),cs=getComputedStyle(o),d=document.createElement('div');
+    d.className=o.className;d.textContent=o.value||(view?'':o.placeholder)||' ';
+    if(!o.value)d.style.color='color-mix(in srgb,currentColor 38%,transparent)';
+    d.style.fontSize=cs.fontSize;d.style.lineHeight=cs.lineHeight;d.style.whiteSpace='pre-wrap';d.style.overflowWrap='break-word';
+    for(const k of keep)d.style[k]=cs[k];
+    d.style.height=o.offsetHeight+'px';d.style.flex='none';n.replaceWith(d);
+  };
+  plain('.ref',['paddingBottom','marginBottom']);plain('.txt',[]);
+  const pn=el.querySelector('.pno'),pc=c.querySelector('.pno'),ps=getComputedStyle(pn);
+  pc.style.fontSize=ps.fontSize;pc.style.paddingTop=ps.paddingTop;
+  const so=el.querySelectorAll('.stk'),sc=c.querySelectorAll('.stk');
+  so.forEach((o,n)=>{const t=sc[n];t.style.width=o.offsetWidth+'px';t.style.height=o.offsetHeight+'px';
+    const w=o.querySelector('.word');if(w)t.querySelector('.word').style.fontSize=getComputedStyle(w).fontSize});
+  const a=el.querySelector('.ink'),b=c.querySelector('.ink');
+  if(pg&&pg.strokes.length&&a.width&&a.height){const im=new Image();im.className='ink';try{im.src=a.toDataURL()}catch(e){}b.replaceWith(im)}
+  else b.remove();
+  c.setAttribute('aria-hidden','true');c.inert=true;return c;
+}
+const slot=el=>({left:el.offsetLeft+'px',top:el.offsetTop+'px',width:el.offsetWidth+'px',height:el.offsetHeight+'px'});
+function go(d){
+  if(flipping)return;
+  let n=start+d*per;if(n<0)return;
+  if(n>=S.pages.length&&document.body.classList.contains('view'))return;
+  turnTo(n,d);
+}
+function turnTo(n,d){
+  const olds=[...document.querySelectorAll('#spread > .page')].map(e=>({c:snap(e),r:slot(e)}));
+  if(n>=S.pages.length){const from=S.pages[S.pages.length-1];for(let k=0;k<2;k++)S.pages.push(blank(from));touchBook()}
+  start=n;active=n;renderAll();
+  if(!olds.length||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  for(let i=start;i<start+per&&i<S.pages.length;i++)sizeCanvas(i);
+  flip(d,olds);settleSoon();
+}
+/* The turning leaf is cut into vertical strips. Every strip is placed on the curve by script each
+   frame (no nested 3D, no reliance on back-face culling), which is what tablets render reliably. */
+function strips(r,fwd,front,back,N){
+  const W=parseFloat(r.width),w=W/N,side=fwd?'left':'right';
+  const leaf=document.createElement('div');leaf.className='leaf';Object.assign(leaf.style,r);
+  const F=[],B=[],shades=[];
+  const dark=i=>'rgba(0,0,0,'+(.02+.2*i/N).toFixed(3)+')';
+  const mk=(src,off,isBack,i)=>{
+    const f=document.createElement('div'),h=document.createElement('div'),sh=document.createElement('div');
+    f.className='strip';h.className='hold';sh.className='shade';
+    f.style.width=(w+1)+'px';f.style[side]='0';f.style.transformOrigin=side+' center';
+    sh.style.background='linear-gradient(to '+((fwd!==isBack)?'right':'left')+','+dark(i)+','+dark(i+1)+')';
+    h.style.left=-off+'px';h.style.width=W+'px';h.append(src.cloneNode(true));f.append(h,sh);
+    if(isBack)f.style.visibility='hidden';
+    leaf.append(f);shades.push(sh);return f;
+  };
+  for(let i=0;i<N;i++){
+    F.push(mk(front,fwd?i*w:W-(i+1)*w-1,false,i));
+    if(back)B.push(mk(back,fwd?W-(i+1)*w-1:i*w,true,i));
+  }
+  $('#spread').append(leaf);return {leaf,F,B,shades,N,w,fwd};
+}
+function pose(L,a0,d,shade){
+  const s=L.fwd?1:-1,w=L.w;let x=0,z=0;
+  for(let i=0;i<L.N;i++){
+    const deg=a0+i*d,rad=deg*Math.PI/180,t='translate3d('+x.toFixed(2)+'px,0,'+z.toFixed(2)+'px) rotateY('+deg.toFixed(2)+'deg)';
+    const showFront=Math.cos(rad)>=0;
+    L.F[i].style.transform=t;L.F[i].style.visibility=showFront?'visible':'hidden';
+    if(L.B.length){L.B[i].style.transform=t+' translateX('+s*w+'px) rotateY(180deg)';L.B[i].style.visibility=showFront?'hidden':'visible'}
+    x+=s*w*Math.cos(rad);z-=s*w*Math.sin(rad);
+  }
+  for(const sh of L.shades)sh.style.opacity=shade;
+}
+function flip(d,olds){
+  const sp=$('#spread'),news=[...sp.querySelectorAll(':scope > .page')];
+  let still=null,L,total=180,rev=false,fwd=d>0;
+  const hold=o=>{still=document.createElement('div');still.className='still';Object.assign(still.style,o.r);still.append(o.c);sp.append(still)};
+  if(olds.length===2&&news.length===2){
+    const stay=d>0?0:1,turn=d>0?1:0;
+    hold(olds[stay]);L=strips(olds[turn].r,fwd,olds[turn].c,snap(news[stay]),12);
+  }else if(d>0){
+    L=strips(olds[0].r,true,olds[0].c,null,10);total=100;
+  }else{
+    hold(olds[0]);L=strips(olds[0].r,true,snap(news[0]),null,10);total=100;rev=true;fwd=true;
+  }
+  flipping=true;
+  const sign=fwd?-1:1,k=total/180,bend=56/L.N,dur=1100;
+  const base=[[0,0],[.25,25],[.5,75],[.75,130],[1,180]],curl=[[0,0],[.25,1],[.5,1],[.75,.75],[1,0]];
+  const at=(K,e)=>{for(let i=1;i<K.length;i++)if(e<=K[i][0]){const a=K[i-1],b=K[i];return a[1]+(b[1]-a[1])*(e-a[0])/(b[0]-a[0])}return K[K.length-1][1]};
+  const draw=p=>{const q=rev?1-p:p,e=q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;pose(L,sign*at(base,e)*k,sign*at(curl,e)*bend,Math.sin(Math.PI*e))};
+  const done=()=>{L.leaf.remove();if(still)still.remove();flipping=false};
+  draw(0);
+  let t0=0;
+  const tick=now=>{if(!t0)t0=now;const p=Math.min(1,(now-t0)/dur);draw(p);if(p<1)requestAnimationFrame(tick);else done()};
+  /* one frame for the copies to be laid out and painted, then move */
+  requestAnimationFrame(()=>requestAnimationFrame(tick));
+  setTimeout(()=>{if(flipping&&L.leaf.isConnected)done()},dur+1500);
+}
+
+/* ---------- handwriting ---------- */
+function sizeCanvas(i){const el=pageEl(i);if(!el)return;const cv=el.querySelector('.ink'),d=Math.min((window.devicePixelRatio||1)*Z.z,2400/(el.clientWidth||1),6);
+  const w=Math.round(el.clientWidth*d),h=Math.round(el.clientHeight*d);if(!w)return;
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}redraw(i);metrics(el,S.pages[i]);checkFull(i)}
+function drawStroke(ctx,s){
+  const p=s.p;ctx.globalAlpha=s.a||1;ctx.strokeStyle=ctx.fillStyle=s.c;ctx.lineWidth=s.w;ctx.lineCap=s.a?'butt':'round';ctx.lineJoin='round';
+  if(p.length<4){ctx.beginPath();ctx.arc(p[0],p[1],s.w/2,0,7);ctx.fill();return}
+  ctx.beginPath();ctx.moveTo(p[0],p[1]);
+  for(let k=2;k<p.length-2;k+=2)ctx.quadraticCurveTo(p[k],p[k+1],(p[k]+p[k+2])/2,(p[k+1]+p[k+3])/2);
+  ctx.lineTo(p[p.length-2],p[p.length-1]);ctx.stroke();
+}
+function redraw(i,extra){const el=pageEl(i);if(!el)return;const cv=el.querySelector('.ink'),ctx=cv.getContext('2d'),k=cv.width/1000;
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.setTransform(k,0,0,k,0,0);
+  for(const s of S.pages[i].strokes)drawStroke(ctx,s);if(extra)drawStroke(ctx,extra);ctx.globalAlpha=1}
+let pinching=false;const Z={z:1,x:0,y:0};
+function applyZoom(){
+  const b=document.querySelector('.book'),w=b.offsetWidth,h=b.offsetHeight;
+  Z.z=Math.max(1,Math.min(5,Z.z));
+  if(Z.z<1.02){Z.z=1;Z.x=Z.y=0}
+  Z.x=Math.min(0,Math.max(w*(1-Z.z),Z.x));Z.y=Math.min(0,Math.max(h*(1-Z.z),Z.y));
+  b.style.transformOrigin='0 0';b.style.transform=Z.z===1?'':'translate('+Z.x+'px,'+Z.y+'px) scale('+Z.z+')';
+  $('#bookwrap').style.overflow=Z.z===1?'':'hidden';
+  const zr=$('#zoomreset');zr.hidden=Z.z===1;zr.textContent=Math.round(Z.z*100)+'% · 원래 크기';
+}
+function zoomDone(){for(let i=start;i<start+per&&i<S.pages.length;i++)sizeCanvas(i)}
+function zoomSetup(){
+  const wrap=$('#bookwrap'),book=document.querySelector('.book');let g=null,wt=0;
+  const mid=t=>({x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2,d:Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY)||1});
+  const base=()=>{const r=book.getBoundingClientRect();return {x:r.left-Z.x,y:r.top-Z.y}};
+  wrap.addEventListener('touchstart',e=>{
+    if(e.touches.length!==2||flipping)return;e.preventDefault();pinching=true;
+    const m=mid(e.touches),o=base();g={d:m.d,z:Z.z,o,ux:(m.x-o.x-Z.x)/Z.z,uy:(m.y-o.y-Z.y)/Z.z};
+  },{passive:false});
+  wrap.addEventListener('touchmove',e=>{
+    if(!g||e.touches.length<2)return;e.preventDefault();
+    const m=mid(e.touches);Z.z=Math.max(1,Math.min(5,g.z*m.d/g.d));
+    Z.x=m.x-g.o.x-g.ux*Z.z;Z.y=m.y-g.o.y-g.uy*Z.z;applyZoom();
+  },{passive:false});
+  const end=e=>{if(!g||e.touches.length>=2)return;g=null;zoomDone();setTimeout(()=>{pinching=false},250)};
+  wrap.addEventListener('touchend',end);wrap.addEventListener('touchcancel',end);
+  /* trackpad pinch / ctrl+wheel zooms, plain wheel pans while zoomed */
+  wrap.addEventListener('wheel',e=>{
+    if(e.ctrlKey){
+      e.preventDefault();const o=base(),ux=(e.clientX-o.x-Z.x)/Z.z,uy=(e.clientY-o.y-Z.y)/Z.z;
+      Z.z=Math.max(1,Math.min(5,Z.z*Math.exp(-e.deltaY*.01)));Z.x=e.clientX-o.x-ux*Z.z;Z.y=e.clientY-o.y-uy*Z.z;applyZoom();
+    }else if(Z.z>1){e.preventDefault();Z.x-=e.deltaX;Z.y-=e.deltaY;applyZoom()}
+    else return;
+    clearTimeout(wt);wt=setTimeout(zoomDone,250);
+  },{passive:false});
+  $('#zoomreset').addEventListener('click',()=>{Z.z=1;applyZoom();zoomDone()});
+  window.addEventListener('resize',applyZoom);
+}
+let lastPen=0; /* when a stylus was last seen: while it is in use, resting hands and fingers are ignored */
+function inkEvents(cv,i){
+  let cur=null,pid=null,ptype='',rect=null;
+  const q=n=>Math.round(n*10)/10;
+  const pt=e=>[q((e.clientX-rect.left)/rect.width*1000),q((e.clientY-rect.top)/rect.width*1000)];
+  const inking=()=>mode==='pen'||mode==='erase';
+  /* stop the tablet from scrolling, zooming or selecting text while writing */
+  for(const t of ['touchstart','touchmove'])cv.addEventListener(t,e=>{if(inking())e.preventDefault()},{passive:false});
+  const erase=e=>{const [x,y]=pt(e),st=S.pages[i].strokes,n=st.length;
+    S.pages[i].strokes=st.filter(s=>{const r=14+s.w/2;for(let k=0;k<s.p.length;k+=2){if(Math.abs(s.p[k]-x)<r&&Math.abs(s.p[k+1]-y)<r)return false}return true});
+    if(S.pages[i].strokes.length!==n){redraw(i);touch(i)}};
+  cv.addEventListener('pointerdown',e=>{
+    if(!inking()||pinching)return;
+    if(e.pointerType==='pen')lastPen=Date.now();
+    else if(e.pointerType==='touch'&&Date.now()-lastPen<20000)return;
+    if(pid!==null){
+      if(e.pointerType==='pen'&&ptype!=='pen'){cur=null;redraw(i)} /* the hand landed first: drop its mark, follow the pen */
+      else return;
+    }
+    e.preventDefault();pid=e.pointerId;ptype=e.pointerType;rect=cv.getBoundingClientRect();
+    try{cv.setPointerCapture(pid)}catch(err){}
+    if(mode==='erase'){erase(e);return}
+    cur={c:pen.c,w:pen.hl?pen.w*6:pen.w,p:pt(e)};if(pen.hl)cur.a=.35;redraw(i,cur)});
+  cv.addEventListener('pointermove',e=>{
+    if(e.pointerType==='pen')lastPen=Date.now();
+    if(e.pointerId!==pid)return;
+    if(pinching){if(cur){cur=null;redraw(i)}return}
+    if(mode==='erase'){erase(e);return}if(!cur)return;
+    let evs=e.getCoalescedEvents?e.getCoalescedEvents():null;if(!evs||!evs.length)evs=[e];
+    const p=cur.p,ctx=cv.getContext('2d');let added=false;
+    for(const ev of evs){
+      const [x,y]=pt(ev),n=p.length,px=p[n-2],py=p[n-1];
+      if(Math.abs(x-px)+Math.abs(y-py)<1)continue;
+      p.push(x,y);added=true;
+      if(!cur.a){ctx.strokeStyle=cur.c;ctx.lineWidth=cur.w;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(x,y);ctx.stroke()}
+    }
+    if(added&&cur.a)redraw(i,cur)});
+  const end=e=>{
+    if(e.pointerId!==pid)return;pid=null;
+    if(pinching&&cur){cur=null;redraw(i)}
+    if(cur){S.pages[i].strokes.push(cur);cur=null;redraw(i);touch(i)}};
+  cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+}
+
+/* ---------- stickers ---------- */
+function stickerHtml(k,s){const d=STK[k];return d.t?'<span class="word" style="font-size:'+(s?'calc('+s*.3+'cqw)':'')+'">'+d.t+'</span>':d.svg}
+const r1=n=>Math.round(n*10)/10;
+function renderStickers(i){
+  const el=pageEl(i);if(!el)return;const box=el.querySelector('.stickers');box.innerHTML='';
+  for(const s of S.pages[i].stickers){
+    const def=STK[s.k];if(!def)continue;
+    const d=document.createElement('div');d.className='stk'+(sel&&sel.id===s.id?' sel':'');d.dataset.id=s.id;
+    d.style.left=s.x+'%';d.style.top=s.y+'%';d.style.transform='translate(-50%,-50%) rotate('+(s.r||0)+'deg)';
+    if(!def.t)d.style.width='calc('+s.s+'cqw)';
+    if(def.wide){d.style.height='calc('+(s.h||def.h)+'cqw)';d.style.background=def.fill;d.innerHTML='<span class="hd l"></span><span class="hd r"></span>'}
+    else d.innerHTML=stickerHtml(s.k,s.s);
+    d.addEventListener('pointerdown',e=>{
+      if(mode!=='sticker')return;e.preventDefault();e.stopPropagation();setActive(i);select(s.id);
+      const r=el.getBoundingClientRect(),h=e.target.classList.contains('hd')?e.target:null,grab=h||d;let moved=false,mv;
+      grab.setPointerCapture(e.pointerId);
+      if(h){
+        /* drag an end: the other end stays put, along the tape's own direction */
+        const dir=h.classList.contains('r')?1:-1,ang=(s.r||0)*Math.PI/180,ux=Math.cos(ang),uy=Math.sin(ang);
+        const L=s.s/100*r.width,ax=s.x/100*r.width-dir*ux*L/2,ay=s.y/100*r.height-dir*uy*L/2;
+        mv=ev=>{
+          let nl=((ev.clientX-r.left-ax)*ux+(ev.clientY-r.top-ay)*uy)*dir;
+          nl=Math.max(r.width*.04,Math.min(r.width*1.3,nl));
+          s.s=r1(nl/r.width*100);s.x=r1((ax+dir*ux*nl/2)/r.width*100);s.y=r1((ay+dir*uy*nl/2)/r.height*100);
+          d.style.width='calc('+s.s+'cqw)';d.style.left=s.x+'%';d.style.top=s.y+'%';moved=true};
+      }else{
+        mv=ev=>{s.x=r1(Math.max(0,Math.min(100,(ev.clientX-r.left)/r.width*100)));
+          s.y=r1(Math.max(0,Math.min(100,(ev.clientY-r.top)/r.height*100)));d.style.left=s.x+'%';d.style.top=s.y+'%';moved=true};
+      }
+      const up=()=>{grab.removeEventListener('pointermove',mv);grab.removeEventListener('pointerup',up);grab.removeEventListener('pointercancel',up);if(moved)touch(i)};
+      grab.addEventListener('pointermove',mv);grab.addEventListener('pointerup',up);grab.addEventListener('pointercancel',up);
+    });
+    box.append(d);
+  }
+}
+function select(id){
+  sel=id?{id,i:active}:null;
+  document.querySelectorAll('.stk').forEach(e=>e.classList.toggle('sel',!!sel&&e.dataset.id===sel.id));
+  for(const b of ['#s-small','#s-big','#s-rot','#s-del'])$(b).disabled=!sel;
+}
+function selSticker(){return sel?S.pages[sel.i].stickers.find(s=>s.id===sel.id):null}
+function editSel(fn){const s=selSticker();if(!s)return;const i=sel.i;fn(s,i);renderStickers(i);touch(i)}
+function addSticker(k){
+  const p=S.pages[active],id=Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  p.stickers.push({id,k,x:40+Math.round(Math.random()*20),y:35+Math.round(Math.random()*20),s:STK[k].s,r:0});
+  renderStickers(active);select(id);touch(active);
+}
+
+/* ---------- toolbar ---------- */
+function swatches(box,list,onpick){
+  for(const it of list){const c=Array.isArray(it)?it[0]:it,b=document.createElement('button');
+    b.className='sw';b.dataset.c=c;b.style.background=c;b.setAttribute('aria-label',Array.isArray(it)?it[1]:'색 '+c);b.title=Array.isArray(it)?it[1]:c;
+    b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>onpick(c));box.append(b)}
+}
+function setMode(m){
+  mode=m;document.body.dataset.mode=m;document.body.classList.toggle('notype',m==='pen'||m==='erase'||m==='sticker');
+  const tab=m==='erase'?'pen':m;
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.mode===tab));
+  for(const k of ['type','pen','sticker','paper'])$('#p-'+k).hidden=k!==tab;
+  $('#eraser').setAttribute('aria-pressed',m==='erase');
+  if(m!=='sticker')select(null);
+  if(m!=='type'&&document.activeElement.matches('.txt,.ref'))document.activeElement.blur();
+}
+function applyStyle(k,v){
+  for(let i=active;i<S.pages.length;i++){const p=S.pages[i];
+    if(i>active&&(p.text.trim()||p.strokes.length))continue;
+    if(p[k]===v)continue;p[k]=v;stylePage(i);touch(i)}
+  setActive(active);
+}
+function setInk(c){applyStyle('color',c)}
+function setPen(c){if(mode==='erase')setMode('pen');pen.c=c;document.querySelectorAll('#pen-sw .sw').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===c));$('#pen-custom').value=c}
+function setPaper(c){S.book.paper=c;applyBook();touchBook()}
+function build(){
+  for(const f of FONTS){const b=document.createElement('button');b.className='btn';b.dataset.f=f.id;b.textContent=f.n;b.style.fontFamily=f.css;
+    b.addEventListener('click',()=>applyStyle('font',f.id));$('#fonts').append(b)}
+  swatches($('#ink-sw'),INKS,setInk);swatches($('#pen-sw'),PENS,setPen);swatches($('#paper-sw'),PAPERS,setPaper);
+  $('#ink-custom').addEventListener('input',e=>setInk(e.target.value));
+  $('#pen-custom').addEventListener('input',e=>setPen(e.target.value));
+  $('#paper-custom').addEventListener('input',e=>setPaper(e.target.value));
+  $('#size').addEventListener('input',e=>{const v=+e.target.value;
+    S.pages.forEach((p,i)=>{if(p.size!==v){p.size=v;touch(i);stylePage(i)}});setActive(active)});
+  $('#size').addEventListener('change',()=>repaginate(true));
+  $('#verse').addEventListener('click',()=>{S.book.verse=S.book.verse===false;applyBook();touchBook()});
+  $('#pen-w').addEventListener('input',e=>pen.w=+e.target.value);
+  $('#hl').addEventListener('click',e=>{pen.hl=!pen.hl;e.currentTarget.setAttribute('aria-pressed',pen.hl);if(mode==='erase')setMode('pen')});
+  $('#eraser').addEventListener('click',()=>setMode(mode==='erase'?'pen':'erase'));
+  $('#undo').addEventListener('click',()=>{if(S.pages[active].strokes.pop()){redraw(active);touch(active)}});
+  const clr=$('#clear');let armed=0;
+  clr.addEventListener('click',()=>{
+    if(!armed){clr.textContent='정말 지울까요? 한 번 더 누르세요';armed=setTimeout(()=>{armed=0;clr.textContent='이 쪽 손글씨 지우기'},3000);return}
+    clearTimeout(armed);armed=0;clr.textContent='이 쪽 손글씨 지우기';S.pages[active].strokes=[];redraw(active);touch(active)});
+  for(const k in STK){const b=document.createElement('button');b.innerHTML=stickerHtml(k);b.setAttribute('aria-label','스티커 '+(STK[k].t||k));
+    if(STK[k].wide||STK[k].t)b.className='wide';b.addEventListener('click',()=>addSticker(k));$('#pal').append(b)}
+  $('#s-small').addEventListener('click',()=>editSel(s=>{const d=STK[s.k];if(d.wide)s.h=Math.max(1.5,r1((s.h||d.h)*.85));else s.s=Math.max(4,r1(s.s*.85))}));
+  $('#s-big').addEventListener('click',()=>editSel(s=>{const d=STK[s.k];if(d.wide)s.h=Math.min(30,r1((s.h||d.h)*1.18));else s.s=Math.min(80,r1(s.s*1.18))}));
+  $('#s-rot').addEventListener('click',()=>editSel(s=>s.r=((s.r||0)+15)%360));
+  $('#s-del').addEventListener('click',()=>{const s=selSticker();if(!s)return;const i=sel.i;S.pages[i].stickers=S.pages[i].stickers.filter(x=>x!==s);select(null);renderStickers(i);touch(i)});
+  document.querySelectorAll('[data-lines]').forEach(b=>b.addEventListener('click',()=>{S.book.lines=b.dataset.lines;applyBook();touchBook()}));
+  document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+  $('#book-title').addEventListener('input',e=>{S.book.title=e.target.value;touchBook()});
+  const setDock=d=>{document.body.dataset.dock=d;
+    document.querySelectorAll('[data-dock]').forEach(b=>{if(b!==document.body)b.setAttribute('aria-pressed',b.dataset.dock===d)});
+    try{localStorage.setItem('pilsa-dock',d)}catch(e){}};
+  document.querySelectorAll('.dock [data-dock]').forEach(b=>b.addEventListener('click',()=>setDock(b.dataset.dock)));
+  let d0='top';try{d0=localStorage.getItem('pilsa-dock')||'top'}catch(e){}
+  setDock(['top','bottom','left','right'].includes(d0)?d0:'top');
+  $('#rrbtn').addEventListener('click',()=>{const n=start-start%2+1;$('#rrhere').textContent=n+'쪽부터';
+    $('#rrnote').textContent="'"+n+"쪽부터'는 지금 펼친 쪽과 그 뒤만 다시 놓고, 앞쪽은 그대로 둡니다.";$('#rr').hidden=false});
+  $('#rrclose').addEventListener('click',()=>$('#rr').hidden=true);
+  $('#rr').addEventListener('click',e=>{if(e.target.id==='rr')$('#rr').hidden=true});
+  $('#rrhere').addEventListener('click',()=>{$('#rr').hidden=true;rearrange(start-start%2)});
+  $('#rrall').addEventListener('click',()=>{$('#rr').hidden=true;rearrange(0)});
+  $('#tocbtn').addEventListener('click',openToc);
+  $('#tocclose').addEventListener('click',()=>$('#toc').hidden=true);
+  $('#toc').addEventListener('click',e=>{if(e.target.id==='toc')$('#toc').hidden=true});
+  document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;for(const id of ['#toc','#rr'])if(!$(id).hidden){$(id).hidden=true;e.stopImmediatePropagation()}},true);
+  const hb=$('#hidebtn');
+  hb.addEventListener('click',()=>{const on=!document.body.classList.contains('bare');
+    document.body.classList.toggle('bare',on);hb.setAttribute('aria-pressed',on);hb.textContent=on?'메뉴 보기':'메뉴 숨기기';
+    Z.z=1;applyZoom()});
+  const vb=$('#viewbtn');
+  const setView=on=>{document.body.classList.toggle('view',on);vb.setAttribute('aria-pressed',on);vb.textContent=on?'편집으로 돌아가기':'전체보기';
+    select(null);if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+    try{if(on){const r=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();if(r&&r.catch)r.catch(()=>{})}
+      else if(document.fullscreenElement)document.exitFullscreen()}catch(e){}};
+  vb.addEventListener('click',()=>setView(!document.body.classList.contains('view')));
+  document.addEventListener('keydown',e=>{if(!document.body.classList.contains('view'))return;
+    if(e.key==='Escape')setView(false);else if(e.key==='ArrowRight')go(1);else if(e.key==='ArrowLeft')go(-1)});
+  $('#edge-l').addEventListener('click',()=>go(-1));$('#edge-r').addEventListener('click',()=>go(1));
+  $('#del-here').addEventListener('click',delHere);$('#del-all').addEventListener('click',delAll);
+  $('#ins-before').addEventListener('click',()=>addSpread(0));$('#ins-after').addEventListener('click',()=>addSpread(2));
+  $('#prev').addEventListener('click',()=>go(-1));$('#next').addEventListener('click',()=>go(1));
+  const mq=window.matchMedia('(min-width:760px)');
+  const fit=()=>{per=mq.matches?2:1;start=per===2?active-active%2:active;renderAll()};
+  mq.addEventListener('change',fit);per=mq.matches?2:1;
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{for(let i=start;i<start+per;i++)checkFull(i);settleSoon()});
+  else settleSoon();
+}
+
+loadLocal();
+if(S.pages.length%2)S.pages.push(blank());
+build();zoomSetup();setPen(pen.c);setMode('type');renderAll();select(null);
+status('불러오는 중…');connect();
+window.addEventListener('pagehide',()=>{saveLocal()});
+</script>
+</body></html>
